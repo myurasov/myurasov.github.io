@@ -1,0 +1,23 @@
+$base-font-family: "Baskerville", "Garamiond", serif !default;
+$base-font-size:   18px !default;
+$base-font-weight: 400 !default;
+$small-font-size:  $base-font-size * 0.875 !default;
+$base-line-height: 1.75 !default;
+
+$spacing-unit:     30px !default;
+
+$text-color:       #000 !default;
+$background-color: #fdfdfd !default;
+
+$highlight-color: rgb(0, 255, 171) !default;
+$brand-color:     darken($highlight-color, 20%) !default;
+
+$grey-color:       #828282 !default;
+$grey-color-light: lighten($grey-color, 40%) !default;
+$grey-color-dark:  darken($grey-color, 25%) !default;
+
+// width of the content area
+$content-width:    800px !default;
+
+$on-palm:          600px !default;
+$on-laptop:        800px !default;

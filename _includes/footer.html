@@ -1,0 +1,36 @@
+<footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            <span class="dash">--<br></span>
+            Mikhail Yurasov<br>
+            {% if false %}
+              <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2"></div>
+
+      <div class="footer-col footer-col-3">
+
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/{{ site.github_username }}" class="github"></a>
+            <a href="https://twitter.com/{{ site.twitter_username }}" class="twitter"></a>
+            <a href="https://linkedin.com/in/{{ site.linkedin_username }}" class="linkedin"></a>
+            <a href="{{ "/feed.xml" | relative_url }}" class="rss"></a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+
+</footer>
