@@ -118,7 +118,7 @@
 }
 
 .footer-col-wrapper {
-    font-size: 0.9em;
+    font-size: 1em;
     color: $grey-color;
     margin-left: -$spacing-unit / 2;
     @extend %clearfix;
@@ -183,6 +183,7 @@
  */
 .page-content {
     padding: $spacing-unit 0;
+    padding-bottom: $spacing-unit - 15px;
 }
 
 .page-heading {
@@ -215,7 +216,7 @@
 }
 
 .post-title {
-    font-size: 42px;
+    font-size: 1.75em;
     letter-spacing: -1px;
     line-height: 1;
     @include media-query($on-laptop) {
@@ -251,7 +252,7 @@
 ///
 
 .social-media-list li a {
-    $w: 20px;
+    $w: 22px;
 
     text-decoration: none;
     opacity: 0.4;
