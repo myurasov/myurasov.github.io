@@ -29,6 +29,3 @@ gems:
 exclude:
   - Gemfile
   - Gemfile.lock
-
-disqus:
-  shortname: deeplyrandom
