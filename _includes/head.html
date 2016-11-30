@@ -7,7 +7,7 @@
   <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
 
   {% if page.thumb %}
-  <meta property="og:image" content="{{ site.url}}{{ page.thumb }}" />
+  <meta property="og:image" content="https://myurasov.github.io/{{ page.thumb }}" />
   {% endif %}
 
   <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
