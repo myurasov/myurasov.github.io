@@ -38,6 +38,8 @@ TODO:
 - [GAN?](#gan)
 - [Wasserstein GAN?](#wasserstein-gan)
 - [Code!](#code)
+    - [Loss function for _**D**_](#loss-function-for-_d_)
+    - [Creating _**D**_](#creating-_d_)
 - [Links](#links)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -81,7 +83,11 @@ Authors claim that compared to vanilla GAN, WGAN has the following benefits:
 
 # Code!
 
-Let's blow the dust off the keyboard. We will implement Wasserstein variety of [ACGAN](https://arxiv.org/pdf/1610.09585v3.pdf) in Keras. ACGAN is a GAN in which _**D**_ predicts not only if the sample is real or fake but also a class to which it belongs.
+Let's blow the dust off the keyboard.
+
+We will implement Wasserstein variety of [ACGAN](https://arxiv.org/pdf/1610.09585v3.pdf) in Keras. ACGAN is a GAN in which _**D**_ predicts not only if the sample is real or fake but also a class to which it belongs.
+
+Below is the code with a bit of explanation on what's going on.
 
 [1] Libraries import:
 
@@ -157,6 +163,84 @@ np.random.seed(RND)
 
 # force Keras to use last dimension for image channels
 K.set_image_dim_ordering('tf')
+```
+
+[5]
+
+### Loss function for _**D**_
+
+- Since the D tries to learn an approximation of Wasserstein distance between training data distribution and one "inside" G and has a linear activation, we do not need to modify it's output here.
+- Mean is taken so the output can be compared between different batch sizes.
+- Predictions are element-wise multiplied with true values which take -1 to allow D output to be maximized (optimizer always tries to minimize loss function value)
+
+```python
+def d_loss(y_true, y_pred):
+    return K.mean(y_true * y_pred)
+```
+
+[6]
+
+### Creating _**D**_
+
+Discriminator takes image as input and has two ouputs:
+- measure of it's "fakeness" (maximized for generated images) with linear activation
+- predicted image class with softmax activation
+- weights are initialized from normal distribution with stddev of 0.02 so initial clipping doesn't cut off all the weights
+
+```python
+def create_D():
+
+    # weights are initlaized from normal distribution with below params
+    weight_init = RandomNormal(mean=0., stddev=0.02)
+
+    input_image = Input(shape=(28, 28, 1), name='input_image')
+
+    x = Conv2D(
+        32, (3, 3),
+        padding='same',
+        name='conv_1',
+        kernel_initializer=weight_init)(input_image)
+    x = LeakyReLU()(x)
+    x = MaxPool2D(pool_size=2)(x)
+    x = Dropout(0.3)(x)
+
+    x = Conv2D(
+        64, (3, 3),
+        padding='same',
+        name='conv_2',
+        kernel_initializer=weight_init)(x)
+    x = MaxPool2D(pool_size=1)(x)
+    x = LeakyReLU()(x)
+    x = Dropout(0.3)(x)
+
+    x = Conv2D(
+        128, (3, 3),
+        padding='same',
+        name='conv_3',
+        kernel_initializer=weight_init)(x)
+    x = MaxPool2D(pool_size=2)(x)
+    x = LeakyReLU()(x)
+    x = Dropout(0.3)(x)
+
+    x = Conv2D(
+        256, (3, 3),
+        padding='same',
+        name='coonv_4',
+        kernel_initializer=weight_init)(x)
+    x = MaxPool2D(pool_size=1)(x)
+    x = LeakyReLU()(x)
+    x = Dropout(0.3)(x)
+
+    features = Flatten()(x)
+
+    output_is_fake = Dense(
+        1, activation='linear', name='output_is_fake')(features)
+
+    output_class = Dense(
+        10, activation='softmax', name='output_class')(features)
+
+    return Model(
+        inputs=[input_image], outputs=[output_is_fake, output_class], name='D')
 ```
 
 # Links
