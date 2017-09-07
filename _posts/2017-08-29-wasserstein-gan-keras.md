@@ -38,8 +38,9 @@ TODO:
 - [GAN?](#gan)
 - [Wasserstein GAN?](#wasserstein-gan)
 - [Code!](#code)
-    - [Loss function for _**D**_](#loss-function-for-_d_)
-    - [Creating _**D**_](#creating-_d_)
+    - [Loss function for D](#loss-function-for-d)
+    - [Creating D](#creating-d)
+    - [Creating G](#creating-g)
 - [Links](#links)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -167,7 +168,7 @@ K.set_image_dim_ordering('tf')
 
 [5]
 
-### Loss function for _**D**_
+### Loss function for D
 
 - Since the D tries to learn an approximation of Wasserstein distance between training data distribution and one "inside" G and has a linear activation, we do not need to modify it's output here.
 - Mean is taken so the output can be compared between different batch sizes.
@@ -180,7 +181,7 @@ def d_loss(y_true, y_pred):
 
 [6]
 
-### Creating _**D**_
+### Creating D
 
 Discriminator takes image as input and has two ouputs:
 - measure of it's "fakeness" (maximized for generated images) with linear activation
@@ -241,6 +242,64 @@ def create_D():
 
     return Model(
         inputs=[input_image], outputs=[output_is_fake, output_class], name='D')
+```
+
+[7]
+
+### Creating G
+
+Generator takes two inputs:
+- a latent random variable of size *Z_SIZE* 
+- class of digit we want to generate (as integer 0..9)
+
+To join those inputs, class integer is internally converted to a sparse vector of *1 x DICT_LEN* (_DICT_LEN_ = 10 in our case) and multiplied by embedding matrix of dimension *DICT_LEN x Z_SIZE*, producing a dense vector of *1 x Z_SIZE* dimension. Then this vector is multiplied (element-wise) with latent input and goes through number of upsampling and convolutional layers so it's dimensions match training images dimensions.
+
+```python
+def create_G(Z_SIZE=Z_SIZE):
+    DICT_LEN = 10
+    EMBEDDING_LEN = Z_SIZE
+
+    # weights are initialized from normal distribution with below params
+    weight_init = RandomNormal(mean=0., stddev=0.02)
+
+    # class#
+    input_class = Input(shape=(1, ), dtype='int32', name='input_class')
+    # encode class# to the same size as Z to use hadamard multiplication later on
+    e = Embedding(
+        DICT_LEN, EMBEDDING_LEN,
+        embeddings_initializer='glorot_uniform')(input_class)
+    embedded_class = Flatten(name='embedded_class')(e)
+
+    # latent var
+    input_z = Input(shape=(Z_SIZE, ), name='input_z')
+
+    # hadamard product
+    h = multiply([input_z, embedded_class], name='h')
+
+    # cnn part
+    x = Dense(1024)(h)
+    x = LeakyReLU()(x)
+
+    x = Dense(128 * 7 * 7)(x)
+    x = LeakyReLU()(x)
+    x = Reshape((7, 7, 128))(x)
+
+    x = UpSampling2D(size=(2, 2))(x)
+    x = Conv2D(256, (5, 5), padding='same', kernel_initializer=weight_init)(x)
+    x = LeakyReLU()(x)
+
+    x = UpSampling2D(size=(2, 2))(x)
+    x = Conv2D(128, (5, 5), padding='same', kernel_initializer=weight_init)(x)
+    x = LeakyReLU()(x)
+
+    x = Conv2D(
+        1, (2, 2),
+        padding='same',
+        activation='tanh',
+        name='output_generated_image',
+        kernel_initializer=weight_init)(x)
+
+    return Model(inputs=[input_z, input_class], outputs=x, name='G')
 ```
 
 # Links
