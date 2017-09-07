@@ -39,8 +39,8 @@ TODO:
 - [Wasserstein GAN?](#wasserstein-gan)
 - [Code!](#code)
     - [Loss function for D](#loss-function-for-d)
-    - [Creating D](#creating-d)
-    - [Creating G](#creating-g)
+    - [Creating Discriminator](#creating-discriminator)
+    - [Creating Generator](#creating-generator)
 - [Links](#links)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -181,7 +181,7 @@ def d_loss(y_true, y_pred):
 
 [6]
 
-### Creating D
+### Creating Discriminator
 
 Discriminator takes image as input and has two ouputs:
 - measure of it's "fakeness" (maximized for generated images) with linear activation
@@ -246,7 +246,7 @@ def create_D():
 
 [7]
 
-### Creating G
+### Creating Generator
 
 Generator takes two inputs:
 - a latent random variable of size *Z_SIZE* 
@@ -300,6 +300,109 @@ def create_G(Z_SIZE=Z_SIZE):
         kernel_initializer=weight_init)(x)
 
     return Model(inputs=[input_z, input_class], outputs=x, name='G')
+```
+
+[8]
+
+Combining D and G into a single model:
+
+```python
+D = create_D()
+
+D.compile(
+    optimizer=RMSprop(lr=0.00005),
+    loss=[d_loss, 'sparse_categorical_crossentropy'])
+
+input_z = Input(shape=(Z_SIZE, ), name='input_z_')
+input_class = Input(shape=(1, ),name='input_class_', dtype='int32')
+
+G = create_G()
+
+# create combined D(G) model
+output_is_fake, output_class = D(G(inputs=[input_z, input_class]))
+DG = Model(inputs=[input_z, input_class], outputs=[output_is_fake, output_class])
+
+DG.compile(
+    optimizer=RMSprop(lr=0.00005),
+    loss=[d_loss, 'sparse_categorical_crossentropy']
+)
+```
+
+[9]
+
+Load MNIST dataset:
+
+```python
+# load mnist data
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+# use all available 70k samples from both train and test sets
+X_train = np.concatenate((X_train, X_test))
+y_train = np.concatenate((y_train, y_test))
+
+# convert to -1..1 range, reshape to (sample_i, 28, 28, 1)
+X_train = (X_train.astype(np.float32) - 127.5) / 127.5
+X_train = np.expand_dims(X_train, axis=3)
+```
+
+[10]
+
+Utilities for generating samples and sending metrics and images to TensorBoard:
+
+```python
+# save 10x10 sample of generated images
+def generate_samples(n=0, save=True):
+
+    zz = np.random.normal(0., 1., (100, Z_SIZE))
+    generated_classes = np.array(list(range(0, 10)) * 10)
+    generated_images = G.predict([zz, generated_classes.reshape(-1, 1)])
+
+    rr = []
+    for c in range(10):
+        rr.append(
+            np.concatenate(generated_images[c * 10:(1 + c) * 10]).reshape(
+                280, 28))
+    img = np.hstack(rr)
+
+    if save:
+        plt.imsave(OUT_DIR + '/samples_%07d.png' % n, img, cmap=plt.cm.gray)
+
+    return img
+
+# write tensorboard summaries
+sw = tf.summary.FileWriter(TENSORBOARD_DIR)
+def update_tb_summary(step, write_sample_images=True):
+
+    s = tf.Summary()
+
+    # losses as is
+    for names, vals in zip((('D_real_is_fake', 'D_real_class'),
+                            ('D_fake_is_fake', 'D_fake_class'), ('DG_is_fake',
+                                                                 'DG_class')),
+                           (D_true_losses, D_fake_losses, DG_losses)):
+
+        v = s.value.add()
+        v.simple_value = vals[-1][1]
+        v.tag = names[0]
+
+        v = s.value.add()
+        v.simple_value = vals[-1][2]
+        v.tag = names[1]
+
+    # D loss: -1*D_true_is_fake - D_fake_is_fake
+    v = s.value.add()
+    v.simple_value = -D_true_losses[-1][1] - D_fake_losses[-1][1]
+    v.tag = 'D loss (-1*D_real_is_fake - D_fake_is_fake)'
+
+    # generated image
+    if write_sample_images:
+        img = generate_samples(step, save=True)
+        s.MergeFromString(tf.Session().run(
+            tf.summary.image('samples_%07d' % step,
+                             img.reshape([1, *img.shape, 1]))))
+
+    sw.add_summary(s, step)
+    sw.flush()
 ```
 
 # Links
