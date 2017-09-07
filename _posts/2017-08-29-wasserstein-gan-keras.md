@@ -38,9 +38,10 @@ TODO:
 - [GAN?](#gan)
 - [Wasserstein GAN?](#wasserstein-gan)
 - [Code!](#code)
-    - [Loss function for D](#loss-function-for-d)
+    - [Loss function for Discriminator](#loss-function-for-discriminator)
     - [Creating Discriminator](#creating-discriminator)
     - [Creating Generator](#creating-generator)
+    - [Training](#training)
 - [Links](#links)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -168,7 +169,7 @@ K.set_image_dim_ordering('tf')
 
 [5]
 
-### Loss function for D
+### Loss function for Discriminator
 
 - Since the D tries to learn an approximation of Wasserstein distance between training data distribution and one "inside" G and has a linear activation, we do not need to modify it's output here.
 - Mean is taken so the output can be compared between different batch sizes.
@@ -403,6 +404,103 @@ def update_tb_summary(step, write_sample_images=True):
 
     sw.add_summary(s, step)
     sw.flush()
+```
+[11]
+
+### Training
+
+Training process consists of following steps:
+
+1. Unfreeze _**D**_ weights to make them learnable.
+1. Clip _**D**_ weights (in -0.01..0.01 range).
+1. Supply _**D**_ with real train images and try to maximize it's output by multiplying it by -1 in loss function and minimizing it's value.
+1. ...
+
+```python
+progress_bar = Progbar(target=ITERATIONS)
+
+DG_losses = []
+D_true_losses = []
+D_fake_losses = []
+
+for it in range(ITERATIONS):
+
+    if len(D_true_losses) > 0:
+        progress_bar.update(
+            it,
+            values=[ # avg of 5 most recent
+                    ('D_real_is_fake', np.mean(D_true_losses[-5:], axis=0)[1]),
+                    ('D_real_class', np.mean(D_true_losses[-5:], axis=0)[2]),
+                    ('D_fake_is_fake', np.mean(D_fake_losses[-5:], axis=0)[1]),
+                    ('D_fake_class', np.mean(D_fake_losses[-5:], axis=0)[2]),
+                    ('D(G)_is_fake', np.mean(DG_losses[-5:],axis=0)[1]),
+                    ('D(G)_class', np.mean(DG_losses[-5:],axis=0)[2])
+            ]
+        )
+        
+    else:
+        progress_bar.update(it)
+
+    # 1: train D on real+generated images
+
+    if (it % 1000) < 25 or it % 500 == 0: # 25 times in 1000, every 500th
+        d_iters = 100
+    else:
+        d_iters = D_ITERS
+
+    for d_it in range(d_iters):
+
+        # unfreeze D
+        D.trainable = True
+        for l in D.layers: l.trainable = True
+
+        # clip D weights
+
+        for l in D.layers:
+            weights = l.get_weights()
+            weights = [np.clip(w, -0.01, 0.01) for w in weights]
+            l.set_weights(weights)
+
+        # 1.1: maximize D output on reals === minimize -1*(D(real))
+
+        # draw random samples from real images
+        index = np.random.choice(len(X_train), BATCH_SIZE, replace=False)
+        real_images = X_train[index]
+        real_images_classes = y_train[index]
+
+        D_loss = D.train_on_batch(real_images, [-np.ones(BATCH_SIZE), 
+          real_images_classes])
+        D_true_losses.append(D_loss)
+
+        # 1.2: minimize D output on fakes 
+
+        zz = np.random.normal(0., 1., (BATCH_SIZE, Z_SIZE))
+        generated_classes = np.random.randint(0, 10, BATCH_SIZE)
+        generated_images = G.predict([zz, generated_classes.reshape(-1, 1)])
+
+        D_loss = D.train_on_batch(generated_images, [np.ones(BATCH_SIZE),
+          generated_classes])
+        D_fake_losses.append(D_loss)
+
+    # 2: train D(G) (D is frozen)
+    # minimize D output while supplying it with fakes, 
+    # telling it that they are reals (-1)
+
+    # freeze D
+    D.trainable = False
+    for l in D.layers: l.trainable = False
+
+    zz = np.random.normal(0., 1., (BATCH_SIZE, Z_SIZE)) 
+    generated_classes = np.random.randint(0, 10, BATCH_SIZE)
+
+    DG_loss = DG.train_on_batch(
+        [zz, generated_classes.reshape((-1, 1))],
+        [-np.ones(BATCH_SIZE), generated_classes])
+
+    DG_losses.append(DG_loss)
+
+    if it % 10 == 0:
+        update_tb_summary(it, write_sample_images=(it % 250 == 0))
 ```
 
 # Links
