@@ -28,6 +28,10 @@ TODO:
 
 - banner 
 - YT video
+- finish training section
+- conclusion
+- cleanup
+- change title, date
 
 -->
 
@@ -42,6 +46,7 @@ TODO:
     - [Creating Discriminator](#creating-discriminator)
     - [Creating Generator](#creating-generator)
     - [Training](#training)
+- [Results](#results)
 - [Links](#links)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -409,12 +414,15 @@ def update_tb_summary(step, write_sample_images=True):
 
 ### Training
 
-Training process consists of following steps:
+Training process consists of the following steps:
 
 1. Unfreeze _**D**_ weights to make them learnable.
 1. Clip _**D**_ weights (in -0.01..0.01 range).
-1. Supply _**D**_ with real train images and try to maximize it's output by multiplying it by -1 in loss function and minimizing it's value.
-1. ...
+1. Supply _**D**_ with real samples and try to maximize it's output by multiplying it by -1 in loss function and minimizing it's value.
+1. Supply _**D**_ with fake samples and try to minimize it's output
+1. Repeat steps 3 & 4 for *D_ITERS* and 100 times occasionally
+1. Freeze _**D**_ weights
+1. Train a stack of discriminator and generator – _**D(G)**_ – trying to minimize the output. This optimizes _**G**_ weights so that frozen and already trained _**D**_ detecting generated fake samples as true ones.
 
 ```python
 progress_bar = Progbar(target=ITERATIONS)
@@ -502,6 +510,8 @@ for it in range(ITERATIONS):
     if it % 10 == 0:
         update_tb_summary(it, write_sample_images=(it % 250 == 0))
 ```
+
+# Results
 
 # Links
 
