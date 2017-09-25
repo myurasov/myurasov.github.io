@@ -1,23 +1,10 @@
 ---
 layout: post
 title:  "Wasserstein GAN in Keras"
-date:   2017-08-29 17:30:00 -0800
+date:   2017-09-24 17:30:00 -0800
 comments: true
 thumb: "assets/posts/wgan/samples-title.png"
 ---
-
-<!--  
-
-TODO:
-
-- banner 
-- YT video
-- finish training section
-- conclusion
-- cleanup
-- change title, date
-
--->
 
 ![Wasserstein GAN]({{ site.url }}/assets/posts/wgan/samples-title.png)
 
