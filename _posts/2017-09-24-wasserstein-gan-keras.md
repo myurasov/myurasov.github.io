@@ -492,9 +492,13 @@ for it in range(ITERATIONS):
 
 # Results
 
+Each second of the video is 250 training iterations. One of the promises of Wasserstein GAN is the correlation between loss and sample quality. As you can see from the loss plot below, after ~8000 training steps loss comes close to zero and indeed, on the video we're starting to see meaningful images after about 32s.
+
 <center>
 <iframe width="400" height="400" src="https://www.youtube.com/embed/hZ-M6t1JZVQ" frameborder="0" allowfullscreen></iframe>
 </center>
+<br>
+![Wasserstein GAN Loss]({{ site.url }}/assets/posts/wgan/wgan-loss.png)
 
 # Links
 
@@ -502,3 +506,4 @@ for it in range(ITERATIONS):
 1. [NIPS 2016 Tutorial: Generative Adversarial Networks](https://arxiv.org/pdf/1701.00160.pdf) – Ian Goodfellow
 1. [Original PyTorch code for the Wasserstein GAN paper](https://github.com/martinarjovsky/WassersteinGAN)
 1. [Conditional Image Synthesis with Auxiliary Classifier GANs](https://arxiv.org/pdf/1610.09585v3.pdf) – Augustus Odena, Christopher Olah, Jonathon Shlens
+1. [Code for the article](https://gist.github.com/myurasov/6ecf449b32eb263e7d9a7f6e9aed5dc2)
