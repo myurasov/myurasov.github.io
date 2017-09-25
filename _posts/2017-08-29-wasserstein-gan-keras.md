@@ -3,24 +3,8 @@ layout: post
 title:  "Wasserstein GAN in Keras"
 date:   2017-08-29 17:30:00 -0800
 comments: true
-thumb: "assets/posts/ssd-tx1/d.jpg"
+thumb: "assets/posts/wgan/samples-title.png"
 ---
-<!-- 
-- brief history and overview of generative models, gen models applications
-- why gans and gen models are useful
-- tree from Goddfellow's tutorial
-- gans training explaned + drawing/schema
-- what are wasserstein gans ('D is a cost function that estimates EM distance between trues (priors) and generated'), what problems they attempt to solve
-- Implementing WGANS in keras - code walk-through + some pics
-- conclusion (wgans vs gans, other novell GAN types)
-- links
-
-- split into 2 parts (GANS, Implementing WGAN)?
-
-
-""This post comes from my experience trying to replicate --paper on WGANs--""
-
--- preface -- -->
 
 <!--  
 
@@ -34,6 +18,10 @@ TODO:
 - change title, date
 
 -->
+
+![Wasserstein GAN]({{ site.url }}/assets/posts/wgan/samples-title.png)
+
+_v. 1.0_
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -514,7 +502,7 @@ for it in range(ITERATIONS):
 # Results
 
 <center>
-<iframe width="560" height="560" src="https://www.youtube.com/embed/hZ-M6t1JZVQ" frameborder="0" allowfullscreen></iframe>
+<iframe width="400" height="400" src="https://www.youtube.com/embed/hZ-M6t1JZVQ" frameborder="0" allowfullscreen></iframe>
 </center>
 
 # Links
