@@ -125,7 +125,7 @@ Z_SIZE = 100
 
 _**D**_ is trained for `D_ITERS` per each _**G**_ iteration.
 
-- Achieving optimal quality of _**D**_ in WGAN apprtoach is more important, so _**D**_ is trained unproportianally more than _**G**_.
+- Achieving optimal quality of _**D**_ in WGAN approach is more important, so _**D**_ is trained unproportionally more than _**G**_.
 - In v2 version of paper (https://arxiv.org/pdf/1701.07875.pdf) _**D**_ is trained 100 times for the first 25 of each 1000 and once every 500 _**G**_ iterations.
 
 ```python
