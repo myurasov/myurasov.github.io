@@ -28,7 +28,7 @@ _v. 1.0_
 
 _[Code for the article](https://gist.github.com/myurasov/6ecf449b32eb263e7d9a7f6e9aed5dc2)_
 
-While reading the [Wasserstein GAN paper](https://arxiv.org/pdf/1701.07875.pdf) I decided that the best way to understand it is to code it. This is a quick overview of the paper itself and is followed by the actual in Keras.
+While reading the [Wasserstein GAN paper](https://arxiv.org/pdf/1701.07875.pdf) I decided that the best way to understand it is to code it. This is a quick overview of the paper itself and is followed by the actual code in Keras.
 
 
 # GAN?
