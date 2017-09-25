@@ -492,7 +492,7 @@ for it in range(ITERATIONS):
 
 # Results
 
-Each second of the video is 250 training iterations. One of the promises of Wasserstein GAN is the correlation between loss and sample quality. As you can see from the loss plot below, after ~8000 training steps loss comes close to zero and indeed, on the video we're starting to see meaningful images after about 32s.
+Each second of the video is 250 training iterations. One of the promises of Wasserstein GAN is the correlation between loss and sample quality. As we can see from the loss plot below, after ~8000 training steps loss comes close to zero and indeed, on the video we're starting to see meaningful images after about 32s.
 
 <center>
 <iframe width="400" height="400" src="https://www.youtube.com/embed/hZ-M6t1JZVQ" frameborder="0" allowfullscreen></iframe>
