@@ -513,6 +513,10 @@ for it in range(ITERATIONS):
 
 # Results
 
+<center>
+<iframe width="560" height="560" src="https://www.youtube.com/embed/hZ-M6t1JZVQ" frameborder="0" allowfullscreen></iframe>
+</center>
+
 # Links
 
 1. [Wasserstein GAN paper](https://arxiv.org/pdf/1701.07875.pdf) – Martin Arjovsky, Soumith Chintala, Léon Bottou
