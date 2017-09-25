@@ -26,7 +26,9 @@ _v. 1.0_
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-While reading the [Wasserstein GAN paper](https://arxiv.org/pdf/1701.07875.pdf) I decided that the best way to understand it is to code it. This is a quick overview of the paper itself and is followed by the actual [code]() in Keras.
+_[Code for the article](https://gist.github.com/myurasov/6ecf449b32eb263e7d9a7f6e9aed5dc2)_
+
+While reading the [Wasserstein GAN paper](https://arxiv.org/pdf/1701.07875.pdf) I decided that the best way to understand it is to code it. This is a quick overview of the paper itself and is followed by the actual in Keras.
 
 
 # GAN?
@@ -64,6 +66,8 @@ Authors claim that compared to vanilla GAN, WGAN has the following benefits:
 - Improved stability. When the _**D**_ is trained till optimality it provides a useful loss for _**G**_ training. This means training of _**D**_ and _**G**_ doesn't have to be balanced in number of samples (it has to be balanced in vanilla GAN approach). Also authors claim that in no experiments they experienced a mode collapse happening with WGAN.
 
 # Code!
+
+_[Code for the article](https://gist.github.com/myurasov/6ecf449b32eb263e7d9a7f6e9aed5dc2)_
 
 Let's blow the dust off the keyboard.
 
