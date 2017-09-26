@@ -506,4 +506,5 @@ Each second of the video is 250 training iterations. One of the promises of Wass
 1. [NIPS 2016 Tutorial: Generative Adversarial Networks](https://arxiv.org/pdf/1701.00160.pdf) – Ian Goodfellow
 1. [Original PyTorch code for the Wasserstein GAN paper](https://github.com/martinarjovsky/WassersteinGAN)
 1. [Conditional Image Synthesis with Auxiliary Classifier GANs](https://arxiv.org/pdf/1610.09585v3.pdf) – Augustus Odena, Christopher Olah, Jonathon Shlens
+1. [Keras ACGAN implementation](https://github.com/lukedeo/keras-acgan)
 1. [Code for the article](https://gist.github.com/myurasov/6ecf449b32eb263e7d9a7f6e9aed5dc2)
