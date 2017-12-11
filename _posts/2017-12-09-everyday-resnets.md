@@ -13,6 +13,11 @@ ResNets for everyday use.
 - constructing resnet18
 - options: avg pooling, more fc layers, adding dropouts
 
+
+CNNs are widely used in many Deep Learning applications, not only in image-related ones, but also in speech recognition, EEG/ECG analysis, etc. – any task where pattern recognition is needed. When it comes to achieving practical results quickly, best thing is often to try to adapt your approach and data to use a high-accuracy pre-trained model. For times when it is feasible to train the entire model from scratch and some CNN is needed, VGG-like architectures are often used. This is likely due to the straightforward implementation, stability in training and the fact that feature vectors from the top layers can serve as relevant input for transfer learning tasks or other branches of the model. However on many tasks ResNets have shown advantages over VGG-like nets such as achieving better accuracy with less computational power needed, better generalization and lesser risk of picking too large model for a task (more on this later). This post gives a few tips on how to implement a ResNet-like architecture for your everyday Deep Learning needs.
+
+
+
 # Links
 
 - Deep Residual Learning for Image Recognition (original ResNet paper) by He, Zhang, Ren, Sun – [https://arxiv.org/pdf/1512.03385.pdf](https://arxiv.org/pdf/1512.03385.pdf)
