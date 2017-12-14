@@ -20,11 +20,13 @@ CNNs are widely used in many Deep Learning applications, not only in image-relat
 
 The idea behind ResNet is to ensure a deeper network (hence with more expressive power) is actually capable of learning what a shallower network can. When more layers are simply stacked together, number of problems emerge: vanishing/exploding gradients, slow convergence and degradation that is not caused by overfitting and leads to error growth with extra layers added.
 
-Authors of ResNet proposed to add _identity connections_ that will help network to learn an identity function in certain blocks, effectively skipping them as needed:
+Authors of ResNet suggested that in may be useful to help network to learn an identity function in certain layers, effectively skipping them as needed. To do that they introduced _identity connections_ – simple addition of output of a deeper layer with a current one:
 
 <center>
 <img src="{{ site.url }}/assets/posts/resnets/resnet-a.png" alt="Identity connections in ResNet" width="40%">
 </center>
+
+This addition not only allows network to learn anything a shallower one can,  but also
 
 # Constructing ResNet 
 
