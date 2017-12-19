@@ -26,11 +26,14 @@ Authors of ResNet suggested that in may be useful to help network to learn an id
 <img src="{{ site.url }}/assets/posts/resnets/resnet-a.png" alt="Identity connections in ResNet" width="40%">
 </center>
 
-This addition not only allows network to learn anything a shallower one can,  but also
+This addition not only allows network to easily learn anything a shallower one can by effectively skipping certain convolutional layers, but also propagate gradients with less modification and therefore much deeper.
 
 # Constructing ResNet 
 
+Authors of ResNet proposed 18, 34, 50, 101 and 152-layer versions of the network. They all share the same structure, the difference is purely in number and size of blocks used between base convolutional layer and top 1000-d densely connected layer. Here is a general template for constructing one:
 
+- Input layer
+- Base convolutional block (64 7x7 filters, stride)
 
 
 # Links
